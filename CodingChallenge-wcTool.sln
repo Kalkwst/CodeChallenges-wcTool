@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingChallenge-wcTool", "CodingChallenge-wcTool\CodingChallenge-wcTool.csproj", "{5A3A8949-80A7-4D28-AD6D-4BE719E6F2B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wc", "wc\wc.csproj", "{5A3A8949-80A7-4D28-AD6D-4BE719E6F2B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
