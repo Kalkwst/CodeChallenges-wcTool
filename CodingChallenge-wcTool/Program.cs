@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿using System.Text;
+using CommandLine;
 
 class Program
 {
@@ -6,6 +7,8 @@ class Program
     private static uint totalWords;
     private static uint totalChars;
     private static uint totalBytes;
+
+    private static string data = string.Empty;
 
     private static bool printLines;
     private static bool printWords;
@@ -41,6 +44,18 @@ class Program
             printWords = true;
         }
 
+        if (!string.IsNullOrEmpty(opts.FilePath))
+        {
+            data = File.ReadAllText(opts.FilePath);
+        }
+        else
+        {
+            while (Console.ReadLine()! is { } line)
+            {
+                data += line + "\r\n";
+            }
+        }
+
         if (!(printBytes || printChars || printLines || printWords))
         {
             printBytes = true;
@@ -50,17 +65,17 @@ class Program
 
         if (printBytes)
         {
-            GetByteCount(opts.FilePath);
+            GetByteCount(data);
         }
 
         if (printLines)
         {
-            GetLineCount(opts.FilePath);
+            GetLineCount(data);
         }
 
         if (printWords)
         {
-            GetWordCount(opts.FilePath);
+            GetWordCount(data);
         }
 
         WriteCounts(totalLines, totalWords, totalChars, totalBytes, opts.FilePath);
@@ -70,27 +85,21 @@ class Program
     {
     }
 
-    static void GetByteCount(string filePath)
+    static void GetByteCount(string data)
     {
-        totalBytes += (uint)new FileInfo(filePath).Length;
+        totalBytes += (uint)Encoding.Default.GetByteCount(data);
     }
 
-    static void GetLineCount(string filePath)
+    static void GetLineCount(string data)
     {
-        totalLines += (uint)File.ReadLines(filePath).Count();
+        totalLines += (uint)data.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries)
+            .Length;
     }
 
-    static void GetWordCount(string filePath)
+    static void GetWordCount(string data)
     {
-        uint wordCount = 0;
-        using var reader = new StreamReader(filePath);
-        while (reader.ReadLine() is { } line)
-        {
-            wordCount += (uint)line.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                .Length;
-        }
-
-        totalWords += wordCount;
+        totalWords += (uint)data.Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+            .Length -1;
     }
 
     private static void WriteCounts(uint lines, uint words, uint chars, uint bytes, string file)
